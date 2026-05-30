@@ -1,49 +1,45 @@
 package SORTING;
 import java.util.*;
 public class Merge {
-    public static void main(String arg[]){
-        Scanner sc=new Scanner(System.in);
-        int a[]=new int[7];
-        int n=a.length;
-        System.out.print("enter the array : ");
-        for(int i=0;i<n;i++){
-            a[i]=sc.nextInt();
-        }
-        mergesort(a,0,n-1);
-        System.out.print("sorted array : ");
-        for(int i=0;i<n;i++){
+    public static void main(String args[]){
+        int a[]={4,7,32,9,2,1,2};
+        fn(a,0,a.length-1);
+        for(int i=0;i<a.length;i++){
             System.out.print(a[i]+" ");
         }
-        sc.close();
+        System.out.println();
     }
-    static void mergesort(int a[],int l,int r){
-        if(l<r){
-            int mid=(l+r)/2;
-            mergesort(a, l, mid);
-            mergesort(a, mid+1, r);
-            merge(a,l,mid,r);
-        }
+    static void fn(int a[],int low,int high){
+        if(low>=high) return;
+        int mid=(low+high)/2;
+        fn(a,low,mid);
+        fn(a,mid+1,high);
+        merge(a,low,mid,high);
     }
-    static void merge(int a[],int l,int mid,int r){
-        int i=l;
+    static void merge(int a[],int low,int mid,int high){
+        List<Integer>temp=new ArrayList<>();
+        int i=low;
         int j=mid+1;
-        int k=0;
-        int b[]=new int[r - l + 1];
-        while(i<=mid && j<=r){
+        while(i<=mid && j<=high){
             if(a[i]<=a[j]){
-                b[k++]=a[i++];
-            }else{
-                b[k++]=a[j++];
+                temp.add(a[i]);
+                i++;
+            }
+            else{
+                temp.add(a[j]);
+                j++;
             }
         }
         while(i<=mid){
-            b[k++]=a[i++];
+                temp.add(a[i]);
+                i++;
         }
-        while(j<=r){
-            b[k++]=a[j++];
+        while(j<=high){
+                temp.add(a[j]);
+                j++;
         }
-        for(int x=0;x<k;x++){
-            a[l+x]=b[x];
+        for(int k=low;k<=high;k++){
+            a[k]=temp.get(k-low);
         }
     }
 }

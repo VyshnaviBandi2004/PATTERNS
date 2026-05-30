@@ -1,75 +1,69 @@
 import java.util.*;
-public class Threesum {
-    public static void main(String[] args){
-        Scanner sc=new Scanner(System.in);
-        System.out.print("enter the array : ");
-        int a[]=new int[13];
-        for(int i=0;i<a.length;i++){
-            a[i]=sc.nextInt();
-        }
-        // System.out.print(brute(a));
-
-        // System.out.print(better(a));
-
-        System.out.print(optimal(a));
-        sc.close();
+public class Threesum{
+    public static void main(String args[]){
+        int a[]={-2,-1,2,-1,0,-2,-2,2,2,0,2,-1,0};
+        // List<List<Integer>>ans=brute(a);
+        // List<List<Integer>>ans=better(a);
+        List<List<Integer>>ans=optimal(a);
+        System.out.println(ans);
     }
-
-
-    static List<List<Integer>>brute(int a[]){
-        Set<List<Integer>>ans=new HashSet<>();
+    static List<List<Integer>> brute(int a[]){
+        Set<List<Integer>>set=new HashSet<>();
         int n=a.length;
-        for(int i=0;i<n;i++){
-            for(int j=i+1;j<n;j++){
+        for(int i=0;i<n-2;i++){
+            for(int j=i+1;j<n-1;j++){
                 for(int k=j+1;k<n;k++){
                     if(a[i]+a[j]+a[k]==0){
-                        List<Integer>temp=Arrays.asList(a[i],a[j],a[k]);
+                       List<Integer>temp=Arrays.asList(a[i],a[j],a[k]);
                         Collections.sort(temp);
-                        ans.add(temp);
+                        set.add(temp);
                     }
                 }
             }
         }
-        return new ArrayList<>(ans);
+        return new ArrayList<>(set);
     }
-
-    static List<List<Integer>>better(int a[]){
-        Set<List<Integer>>ans=new HashSet<>();
+    static List<List<Integer>> better(int a[]){
         int n=a.length;
+        Set<List<Integer>>ans=new HashSet<>();
         for(int i=0;i<n;i++){
-            Set<Integer>store=new HashSet<>();
+            Set<Integer>set=new HashSet<>();
             for(int j=i+1;j<n;j++){
                 int k=-(a[i]+a[j]);
-                if(store.contains(k)){
+                if(set.contains(k)){
                     List<Integer>temp=Arrays.asList(a[i],a[j],k);
                     Collections.sort(temp);
                     ans.add(temp);
                 }
-                store.add(a[j]);
+                set.add(a[j]);
             }
         }
         return new ArrayList<>(ans);
     }
-
-    static List<List<Integer>>optimal(int a[]){
-        int n=a.length;
-        List<List<Integer>>ans=new ArrayList<>();
+    static List<List<Integer>> optimal(int a[]){
+        List<List<Integer>> ans=new ArrayList<>();
         Arrays.sort(a);
+        int n=a.length;
         for(int i=0;i<n;i++){
             if(i>0 && a[i]==a[i-1]) continue;
-            int left=i+1;
-            int right=n-1;
-            while(left<right){
-                int sum=a[i]+a[left]+a[right];
-                if(sum==0){
-                    ans.add(Arrays.asList(a[i],a[left],a[right]));
-                    left++;
-                    right--;
-                    while(left<right && a[left]==a[left-1]) left++;
-                    while(left<right && a[right]==a[right+1]) right--;
+            int j=i+1;
+            int k=n-1;
+            while(j<k){
+                int sum=a[i]+a[j]+a[k];
+                if(sum<0){
+                    j++;
                 }
-                else if(sum>0) right--;
-                else left++;
+                else if(sum>0){
+                    k--;
+                }
+                else{
+                    List<Integer>temp=Arrays.asList(a[i],a[j],a[k]);
+                    ans.add(temp);
+                    j++;
+                    k--;
+                    while(j<k && a[j]==a[j-1]) j++;
+                    while(j<k && a[k]==a[k+1]) k--;
+                }
             }
         }
         return ans;
